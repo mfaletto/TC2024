@@ -275,7 +275,7 @@ instruccion: bloque
             | forStatement
             | whileStatement
             | declaracionFuncion
-            | llamadaFuncion
+            | llamadaFuncion 
             | llamadaPrintf
             | returnStatement
             ;
@@ -284,7 +284,7 @@ bloque: LLA instrucciones LLC;
 
 declaracion: (INT | DOUBLE | FLOAT) ID PYC;
 
-asignacion: ID IGUAL (expression | ID | NUMERO) PYC;
+asignacion: (INT | DOUBLE | FLOAT)? ID IGUAL ( llamadaFuncion | expression | ID | NUMERO) PYC;
 
 ifStatement: IF LP expression RP bloque (ELSE bloque)?;
 
@@ -294,6 +294,8 @@ forExpression: asignacion expression PYC ID ACUM;
 
 whileStatement: WHILE LP expression RP bloque;
 
+llamadaFuncion: ID LP argumentos? RP ;
+
 expression: term ((MAS | MENOS | COMPARE) term)*;
 
 term: factor ((MULT | DIV) factor)*;
@@ -301,8 +303,6 @@ term: factor ((MULT | DIV) factor)*;
 factor: ID | NUMERO | LP expression RP | llamadaFuncion;
 
 llamadaPrintf: PRINTF LP STRING (COMMA argumentos)? RP PYC;
-
-llamadaFuncion: ID LP argumentos? RP PYC;
 
 argumentos: expression (COMMA expression)*;
 

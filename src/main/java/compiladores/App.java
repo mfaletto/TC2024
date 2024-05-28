@@ -33,14 +33,14 @@ public class App {
         ParseTree tree =  parser.programa();                                   //Sale el arbol sintactico
 
         // Conectamos el visitor
-        // Caminante visitor = new Caminante();
-        // visitor.visit(tree);
-        // System.out.println(visitor);
-        // System.out.println(visitor.getErrorNodes());
+         //Caminante visitor = new Caminante();
+         //visitor.visit(tree);
+         //System.out.println(visitor);
+         //System.out.println(visitor.getErrorNodes());
 
         // Imprime el arbol obtenido
-        System.out.println(tree);
-        System.out.println(tree.toStringTree(parser));                         //Sale el arbol sintactico parte2
+        //System.out.println(tree);
+        //System.out.println(tree.toStringTree(parser));                         //Sale el arbol sintactico parte2
         //System.out.println(escucha);
         
     }
