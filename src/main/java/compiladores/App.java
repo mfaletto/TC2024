@@ -22,26 +22,33 @@ public class App {
         compiladoresParser parser = new compiladoresParser(tokens);
                 
         // create Listener
-        compiladoresBaseListener escucha = new Escucha();                     // Para ver todos los pasos del nodo
+        compiladoresBaseListener escucha = new Escucha();
 
-        //Conecto el objeto con Listeners al parser 
-        parser.addParseListener(escucha);                                     //abrir el escucha
+        // Conecto el objeto con Listeners al parser
+        parser.addParseListener(escucha);
+
+        // Add custom error listener
+        parser.removeErrorListeners(); // remove default ConsoleErrorListener
+        parser.addErrorListener(new ErrorListener());
 
         // Solicito al parser que comience indicando una regla gramatical
         // En este caso la regla es el simbolo inicial
-        parser.programa();
-        ParseTree tree =  parser.programa();                                   //Sale el arbol sintactico
+        // parser.s();
+        // ParseTree tree =  parser.s();
+        //ParseTree tree =  parser.programa();
+         parser.programa();
+       // ParseTree tree =  parser.expresiones();
 
         // Conectamos el visitor
-         //Caminante visitor = new Caminante();
-         //visitor.visit(tree);
-         //System.out.println(visitor);
-         //System.out.println(visitor.getErrorNodes());
+        //Caminante visitor = new Caminante();
+        //visitor.visit(tree);
+        //System.out.println(visitor);
+        //System.out.println(visitor.getErrorNodes());
 
         // Imprime el arbol obtenido
-        //System.out.println(tree);
-        //System.out.println(tree.toStringTree(parser));                         //Sale el arbol sintactico parte2
         //System.out.println(escucha);
+        //System.out.println(tree.toStringTree(parser));
+        System.out.println(parser);
         
     }
 }

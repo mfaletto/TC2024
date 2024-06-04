@@ -227,12 +227,17 @@ grammar compiladores;
 
 @header {
 package compiladores;
+import java.util.HashSet;
+import java.util.Set;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 }
 
 fragment LETRA : [A-Za-z] ;
 fragment DIGITO : [0-9] ;
 
 WS: [ \t\r\n]+ -> skip;
+
 
 PYC: ';';
 LLA: '{';

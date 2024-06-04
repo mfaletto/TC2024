@@ -2,6 +2,7 @@ package compiladores;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.tree.ErrorNode;
 
 import compiladores.compiladoresParser.DeclaracionContext;
 import compiladores.compiladoresParser.InstruccionContext;
@@ -46,22 +47,28 @@ public class Escucha extends compiladoresBaseListener {
     public void visitTerminal(TerminalNode node) {
         // TODO Auto-generated method stub
         hojas++;
-        System.out.println("Estoy en una HOJA --> " + node.getText());
+        //System.out.println("Estoy en una HOJA --> " + node.getText());
     }
     
     @Override
+    public void visitErrorNode(ErrorNode node) {
+        System.out.println("  Error   : " + node.getText());
+    }
+
+    @Override
     public void enterDeclaracion(DeclaracionContext ctx) {
-        System.out.println(" inicio : " + ctx.getText());
+        //System.out.println(" inicio : " + ctx.getText());
     }
 
     @Override
     public void exitDeclaracion(DeclaracionContext ctx) {
-        System.out.println("  fin   : " + ctx.getText());
+        //System.out.println("  fin   : " + ctx.getText());
     }
 
     @Override
     public String toString() {
         return "Escucha [nodos=" + nodos + ", hojas=" + hojas + "]";
     }
+    
     
 }
