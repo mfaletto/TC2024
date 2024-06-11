@@ -212,7 +212,6 @@ parametros: (INT | DOUBLE | FLOAT) ID (',' (INT | DOUBLE | FLOAT) ID)*;
 
 returnStatement: RETURN (NUMERO | expression?) PYC;
 
-*/
 
 
 
@@ -227,10 +226,6 @@ grammar compiladores;
 
 @header {
 package compiladores;
-import java.util.HashSet;
-import java.util.Set;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 }
 
 fragment LETRA : [A-Za-z] ;
@@ -238,6 +233,99 @@ fragment DIGITO : [0-9] ;
 
 WS: [ \t\r\n]+ -> skip;
 
+PYC: ';';
+LLA: '{';
+LLC: '}';
+LP: '(';
+RP: ')';
+INT: 'int'; 
+IF: 'if';
+FOR: 'for';
+WHILE: 'while';
+ELSE: 'else';
+RETURN: 'return';
+PRINTF: 'printf'; 
+VOID: 'void';
+COMPARE: ('<' | '>' | '<=' | '>=' | '==' | '!=');
+ACUM: ('++' | '--');
+IGUAL: '=';
+MAS: '+';
+MENOS: '-';
+MULT: '*';
+DIV: '/';
+DOUBLE: 'double';
+FLOAT: 'float';
+COMMA: ',';
+PUNTO: '.';
+COMENTARIO: '//';
+STRING: '"' (~["\\] | '\\' .)* '"';
+
+ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
+NUMERO : (DIGITO+ | DIGITO+ PUNTO DIGITO+) ;
+
+programa: (declaracionFuncion | instrucciones) EOF;
+
+instrucciones: instruccion*;
+
+instruccion: bloque
+            | declaracion
+            | asignacion
+            | ifStatement
+            | forStatement
+            | whileStatement
+            | declaracionFuncion
+            | llamadaFuncion 
+            | llamadaPrintf
+            | returnStatement
+            | puntocoma
+            ;
+
+bloque: LLA instrucciones LLC;
+
+puntocoma: PYC;
+
+declaracion: INT ID puntocoma;
+
+asignacion: (INT | DOUBLE | FLOAT)? ID IGUAL ( llamadaFuncion | expression | ID | NUMERO) puntocoma;
+
+ifStatement: IF LP expression RP bloque (ELSE bloque)?;
+
+forStatement: FOR LP forExpression RP bloque;
+
+forExpression: asignacion expression puntocoma ID ACUM;
+
+whileStatement: WHILE LP expression RP bloque;
+
+llamadaFuncion: ID LP argumentos? RP ;
+
+expression: term ((MAS | MENOS | COMPARE) term)*;
+
+term: factor ((MULT | DIV) factor)*;
+
+factor: ID | NUMERO | LP expression RP | llamadaFuncion;
+
+llamadaPrintf: PRINTF LP STRING (COMMA argumentos)? RP puntocoma;
+
+argumentos: expression (COMMA expression)*;
+
+declaracionFuncion: (INT | DOUBLE | FLOAT | VOID) ID LP parametros? RP bloque;
+
+parametros: (INT | DOUBLE | FLOAT) ID (COMMA (INT | DOUBLE | FLOAT) ID)*;
+
+returnStatement: RETURN (expression | NUMERO)? puntocoma;
+
+comentario: COMENTARIO STRING puntocoma;*/
+
+grammar compiladores;
+
+@header {
+package compiladores;
+}
+
+fragment LETRA : [A-Za-z] ;
+fragment DIGITO : [0-9] ;
+
+WS: [ \t\r\n]+ -> skip;
 
 PYC: ';';
 LLA: '{';
@@ -287,7 +375,7 @@ instruccion: bloque
 
 bloque: LLA instrucciones LLC;
 
-declaracion: (INT | DOUBLE | FLOAT) ID PYC;
+declaracion: (INT | DOUBLE | FLOAT) ID ((IGUAL(NUMERO | ID))|(COMMA ID))* PYC;
 
 asignacion: (INT | DOUBLE | FLOAT)? ID IGUAL ( llamadaFuncion | expression | ID | NUMERO) PYC;
 

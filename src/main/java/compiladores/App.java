@@ -1,54 +1,66 @@
 package compiladores;
 
-import org.antlr.v4.runtime.tree.ParseTree;
+import java.util.List;
+import java.util.Map;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.*;
+import java.util.ArrayList;
 
-// Las diferentes entradas se explicaran oportunamente
 public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, Compilador!!!");
-        // create a CharStream that reads from file
+
         CharStream input = CharStreams.fromFileName("input/programa.txt");
 
-        // create a lexer that feeds off of input CharStream
         compiladoresLexer lexer = new compiladoresLexer(input);
-        
-        // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        
-        // create a parser that feeds off the tokens buffer
         compiladoresParser parser = new compiladoresParser(tokens);
-                
-        // create Listener
-        compiladoresBaseListener escucha = new Escucha();
 
-        // Conecto el objeto con Listeners al parser
-        parser.addParseListener(escucha);
-
-        // Add custom error listener
-        parser.removeErrorListeners(); // remove default ConsoleErrorListener
-        parser.addErrorListener(new ErrorListener());
-
-        // Solicito al parser que comience indicando una regla gramatical
-        // En este caso la regla es el simbolo inicial
-        // parser.s();
-        // ParseTree tree =  parser.s();
-        //ParseTree tree =  parser.programa();
-         parser.programa();
-       // ParseTree tree =  parser.expresiones();
-
-        // Conectamos el visitor
-        //Caminante visitor = new Caminante();
-        //visitor.visit(tree);
-        //System.out.println(visitor);
-        //System.out.println(visitor.getErrorNodes());
-
-        // Imprime el arbol obtenido
-        //System.out.println(escucha);
-        //System.out.println(tree.toStringTree(parser));
-        System.out.println(parser);
+        // Crear la lista de errores sintácticos
+        //List<String> syntaxErrors = new ArrayList<>();
         
+        // Agregar el SyntaxErrorListener
+        //parser.removeErrorListeners();
+        //parser.addErrorListener(new SyntaxErrorListener(syntaxErrors));
+        
+        // Iniciar la compilación
+        ParseTree tree = parser.programa();
+        
+        // Crear los listeners
+        Escucha escucha = new Escucha();
+        ErrorListener customListener = new ErrorListener();
+        
+        // Recorrer el árbol de derivación
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(escucha, tree);
+        walker.walk(customListener, tree);
+
+        // Agregar errores sintácticos al customListener
+        //customListener.addSyntaxErrors(syntaxErrors);
+        
+        // Imprimir la tabla de símbolos y errores semánticos si hay
+        System.out.println("Tabla de Símbolos:");
+        tablaSimbolos symbolTable = customListener.getSymbolTable();
+        for (Map.Entry<String, Symbol> entry : symbolTable.getSymbols().entrySet()) {
+            Symbol symbol = entry.getValue();
+            System.out.printf("Identificador: %s, Tipo: %s, Inicializado: %s\n",
+                    symbol.getName(), symbol.getType(), symbol.isInitialized());
+        }
+
+        List<String> errors = customListener.getErrors();
+        
+        if (!errors.isEmpty()) {
+            System.out.println("Errores:");
+            for (String error : errors) {
+                System.out.println(error);
+            }
+        } else {
+            System.out.println("No se encontraron errores.");
+        }
     }
 }
