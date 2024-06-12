@@ -25,16 +25,29 @@ public class ErrorListener extends compiladoresBaseListener{
 
     @Override
     public void enterDeclaracion(compiladoresParser.DeclaracionContext ctx) {
-        String type = ctx.getChild(0).getText();
-        String name = ctx.getChild(1).getText();
-        boolean initialized = ctx.getChild(2).getText().equals("=");
         
-        try {
-            tablaSimbolos.addSymbol(name, type, initialized);
-            
-        } catch (Exception e) {
-            errors.add(e.getMessage());
+        String declarationText = ctx.getText();
+        // Asegúrate de que la declaración termina con un punto y coma
+        if (!declarationText.endsWith(";")) {
+            System.err.println("Error sintáctico: Falta el punto y coma en la declaración: " + declarationText);
         }
+        // Verifica que las variables estén separadas correctamente
+        else if(declarationText.contains(",,")) {
+            System.err.println("Error sintáctico: Formato incorrecto en la lista de declaración de variables: " + declarationText);
+        }
+        else{
+            String type = ctx.getChild(0).getText();
+            String name = ctx.getChild(1).getText();
+            boolean initialized = ctx.getChild(2).getText().equals("=");
+            
+            try {
+                tablaSimbolos.addSymbol(name, type, initialized);
+                
+            } catch (Exception e) {
+                errors.add(e.getMessage());
+            }
+        }
+        
         // Check for the presence of a semicolon
         /*if (ctx.getChildCount() < 3 || !ctx.getChild(2).getText().equals(";")) {
             errors.add("Error sintáctico: Se esperaba un punto y coma ';' después de la declaración de " + name + " en la línea " + ctx.start.getLine());
