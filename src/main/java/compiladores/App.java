@@ -22,7 +22,6 @@ public class App {
         // Conecto el objeto con Listeners al parser
         parser.addParseListener(escucha);
 
-        
         parser.addErrorListener(new SyntaxErrorListener());  // Agregar nuestro listener de errores
 
         parser.programa();

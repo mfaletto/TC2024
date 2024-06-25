@@ -4,12 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-/*
-enum Type{
-    INT,
-    DOUBLE,
-    VOID
-} */
 
 class Symbol {
     private String name;

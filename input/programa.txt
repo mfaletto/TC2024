@@ -5,9 +5,9 @@ int main() {
     g = a + a;
     int j, l, m;
     if (x > 0) {
-       x = x+ 1;
+       x = x + 1;
     }
 }
 int function(){
-    x = x+ 1;
+    x = x + 1;
 }

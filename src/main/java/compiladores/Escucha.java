@@ -50,20 +50,17 @@ public class Escucha extends compiladoresBaseListener {
 
     @Override
     public void exitDeclaracion (compiladoresParser.DeclaracionContext ctx){ //DOBLE DECLARACION Y INICIALIZAR? //ERROR 1
-        
-        String type = (ctx.getChild(0).getText());
-        String name = ctx.getChild(1).getText();
 
-        
+        String type = ctx.getChild(0) != null ? ctx.getChild(0).getText() : "tipo_desconocido";
+        String name = ctx.getChild(1) != null ? ctx.getChild(1).getText() : "nombre_desconocido";
+
         Symbol symbol = new Symbol(name, type);
-        
+
         if(tablaSimbolos.findSymbol(symbol)!=null){
             System.out.println("Error semántico: Doble declaración : Variable : " + name + " , Linea: " + ctx.start.getLine() );
         }else{
             tablaSimbolos.addSymbol(symbol);
-            if(ctx.getChild(2).getText().equals("=")){
-                symbol.setInitialized(true);
-            }
+            symbol.setInitialized(true);
         }
         String declarationText = ctx.getText();
         if(declarationText.contains(",,")){
@@ -74,10 +71,11 @@ public class Escucha extends compiladoresBaseListener {
     @Override
     public void exitExpression (compiladoresParser.ExpressionContext ctx){ //VERIFICAR SI ESTA INICIALIZADO y DECLARADO //ERROR 2 y 3
         String name = ctx.getChild(0).getText();
-        String type = ctx.getChild(1).getText();
+        String type = "";
         Symbol symbol = new Symbol(name, type);
-
+        
         if (!tablaSimbolos.isInitialized(symbol)) {
+
             System.out.println("Error semántico: Uso de un identificador no inicializado : Variable : " + name + " , Linea: " + ctx.start.getLine() );
         }
     }
@@ -94,9 +92,4 @@ public class Escucha extends compiladoresBaseListener {
             }
         }
     }
-
-    
-    
-
-    //VERICAR DECLARADO PERO NO USADO
 }
