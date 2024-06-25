@@ -3,5 +3,11 @@ int main() {
     int f;
     int f;
     g = a + a;
-    int j,l,m;
+    int j, l, m;
+    if (x > 0) {
+       x = x+ 1;
+    }
+}
+int function(){
+    x = x+ 1;
 }

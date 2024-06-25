@@ -1,5 +1,8 @@
 package compiladores;
 
+import java.util.Map;
+import org.antlr.v4.runtime.Token;
+
 public class Escucha extends compiladoresBaseListener {
     
     private tablaSimbolos tablaSimbolos = new tablaSimbolos();
@@ -7,11 +10,24 @@ public class Escucha extends compiladoresBaseListener {
     @Override
     public void enterBloque (compiladoresParser.BloqueContext ctx){
         tablaSimbolos.addContexto();
+
     }
 
     @Override
     public void exitBloque (compiladoresParser.BloqueContext ctx){
         tablaSimbolos.delContexto();
+
+        // Verificar que las llaves de apertura y cierre están presentes
+        Token startToken = ctx.getStart();
+        Token stopToken = ctx.getStop();
+
+        if (startToken.getType() != compiladoresParser.LLA) {
+            System.out.println("Error sintáctico: Falta llave de apertura '{' en línea " + startToken.getLine() + ":" + startToken.getCharPositionInLine());
+        }
+
+        if (stopToken == null || stopToken.getType() != compiladoresParser.LLC) {
+            System.out.println("Error sintáctico: Falta llave de cierre '}' en línea " + startToken.getLine() + ":" + startToken.getCharPositionInLine());
+        }
     }
     
     @Override
@@ -68,24 +84,19 @@ public class Escucha extends compiladoresBaseListener {
 
     @Override
     public void exitPrograma (compiladoresParser.ProgramaContext ctx){ //VERIFICAR SI ESTA UTILIZADA //ERROR 4
-        //Symbol id = new Symbol (ctx.ID().toString())
-        // obtener el tipo y el nombre, buscar si existe en la tabla de simbolos, sino agregarlo
-
-        /*tablaSimbolos symbolTable = this.getSymbolTable();
-        for (Map.Entry<String, Symbol> entry : symbolTable.getSymbols().entrySet()) {
-            Symbol symbol = entry.getValue();
-            if(!symbol.isInitialized() && symbol.isDeclared()){
-                errors.add("Error semántico: Identificador declarado pero no usado " + symbol.getName());
+       
+         for (Contexto contexto : tablaSimbolos.getContextos()) {
+            for (Map.Entry<String, Symbol> entry : contexto.getSymbols().entrySet()) {
+                Symbol symbol = entry.getValue();
+                if (!symbol.isUsed()) {
+                    System.out.println("Advertencia: Variable declarada pero no usada : Variable : " + symbol.getName());
+                }
             }
-        }*/
+        }
     }
 
     
-    @Override
-    public void exitLlamadaFuncion (compiladoresParser.LlamadaFuncionContext ctx){ //VERIFICAR SI LA FUNCION ES UN ID (REVISAR EL DIAGRAMA DEL PROFE PARA LA TABLA SIMBOLOS)
-        //Symbol id = new Symbol (ctx.ID().toString())
-        // obtener el tipo y el nombre, buscar si existe en la tabla de simbolos, sino agregarlo
-    }
+    
 
     //VERICAR DECLARADO PERO NO USADO
 }

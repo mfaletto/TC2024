@@ -362,8 +362,8 @@ programa: (declaracionFuncion | instrucciones) EOF;
 instrucciones: instruccion*;
 
 instruccion: bloque
-            | declaracion
-            | asignacion
+            | declaracion 
+            | asignacion 
             | ifStatement
             | forStatement
             | whileStatement
@@ -387,7 +387,7 @@ forExpression: asignacion expression PYC ID ACUM;
 
 whileStatement: WHILE LP expression RP bloque;
 
-llamadaFuncion: ID LP argumentos? RP ;
+llamadaFuncion: ID LP argumentos? RP;
 
 expression: term ((MAS | MENOS | COMPARE) term)*;
 

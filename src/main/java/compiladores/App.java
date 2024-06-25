@@ -15,13 +15,15 @@ public class App {
         compiladoresParser parser = new compiladoresParser(tokens);
 
         // create Listener
-        compiladoresBaseListener escucha = new Escucha();
+        Escucha escucha = new Escucha();
+
+        parser.removeErrorListeners();  // Remover los listeners de errores por defecto
 
         // Conecto el objeto con Listeners al parser
         parser.addParseListener(escucha);
+
         
-        parser.removeErrorListeners();
-        parser.addErrorListener(new SyntaxErrorListener());
+        parser.addErrorListener(new SyntaxErrorListener());  // Agregar nuestro listener de errores
 
         parser.programa();
     }

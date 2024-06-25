@@ -82,8 +82,7 @@ class Contexto {
         symbols.put(symbol.getName(), symbol);
     }
 
-    
-    public Map<String , Symbol> getSymbol(){
+    public Map<String, Symbol> getSymbols() {
         return symbols;
     }
 
@@ -154,6 +153,10 @@ public class tablaSimbolos {
         }else{
             return false;
         }
+    }
+
+    public List<Contexto> getContextos() {
+        return contextos;
     }
 }
 
